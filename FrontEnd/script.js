@@ -50,15 +50,20 @@ document.getElementById("saveButton").addEventListener("click", function () {
         valor: parseFloat(valor.replace('R$ ', '').replace(',', '.')),
     };
 
-    console.log(JSON.stringify(productData, null, 2));
+    // console.log(JSON.stringify(productData, null, 2));
 });
 
 // Chamando a API em JAVA
-
-
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById('productForm');
     const saveButton = document.getElementById('saveButton');
+    const messageDiv = document.createElement('div');
+    const messageDivError = document.createElement('div');
+    messageDiv.className = 'success-message';
+    messageDivError.className = 'error-message';
+
+    saveButton.parentElement.appendChild(messageDiv);
+    saveButton.parentElement.appendChild(messageDivError);
 
     saveButton.addEventListener('click', async () => {
         const cod = document.getElementById('cod').value;
@@ -71,23 +76,41 @@ document.addEventListener("DOMContentLoaded", () => {
             valor
         };
 
-        try {
-            const response = await fetch('http://localhost:8080/api', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(produto)
-            });
+        if (cod && descricao && valor) {
+            messageDivError.textContent = '';
+            const produto = {
+                cod,
+                descricao,
+                valor
+            };
 
-            if (!response.ok) {
-                throw new Error('Erro ao enviar os dados');
+            try {
+                const response = await fetch('http://localhost:8080/api', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(produto)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erro ao enviar os dados');
+                }
+
+                const resultado = await response.json();
+
+                // Exibe a mensagem de sucesso e limpa os campos
+                messageDiv.textContent = `Produto salvo com sucesso!`;
+                setTimeout(() => {
+                    messageDiv.textContent = '';
+                    form.reset();
+                }, 2000);
+
+            } catch (error) {
+                alert(`Erro: ${error.message}`);
             }
-
-            const resultado = await response.json();
-            alert(`Produto salvo com sucesso: ${JSON.stringify(resultado)}`);
-        } catch (error) {
-            alert(`Erro: ${error.message}`);
+        } else {
+            messageDivError.textContent = `Preencha todos os campos para salvar o produto!`;
         }
     });
 });
