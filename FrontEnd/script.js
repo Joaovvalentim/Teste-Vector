@@ -42,15 +42,16 @@ document.getElementById("saveButton").addEventListener("click", function () {
 
     const cod = parseInt(document.getElementById('cod').value, 10);
     const descricao = document.getElementById('descricao').value;
-    const valor = document.getElementById('valor').value;
+    const valor = document.getElementById('valor').value.replace('R$ ', '').replace(',', '.');
+
 
     const productData = {
         cod,
         descricao,
-        valor: parseFloat(valor.replace('R$ ', '').replace(',', '.')),
+        valor: parseFloat(valor),
     };
 
-    // console.log(JSON.stringify(productData, null, 2));
+    console.log(JSON.stringify(productData, null, 2));
 });
 
 // Chamando a API em JAVA
@@ -68,20 +69,14 @@ document.addEventListener("DOMContentLoaded", () => {
     saveButton.addEventListener('click', async () => {
         const cod = document.getElementById('cod').value;
         const descricao = document.getElementById('descricao').value;
-        const valor = document.getElementById('valor').value;
-
-        const produto = {
-            cod,
-            descricao,
-            valor
-        };
+        const valor = document.getElementById('valor').value.replace('R$ ', '').replace(',', '.');
 
         if (cod && descricao && valor) {
             messageDivError.textContent = '';
             const produto = {
                 cod,
                 descricao,
-                valor
+                valor,
             };
 
             try {
