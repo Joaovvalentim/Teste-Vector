@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastro de Produtos</title>
     <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+    <!-- Mudança para carregar o script após o carregamento da página -->
   </head>
   <body>
     <div class="container">
@@ -18,8 +20,9 @@
             name="cod"
             required
             placeholder="Ex: 4572"
+            pattern="\d{1,5}"
             oninput="if (this.value.length > 5) this.value = this.value.slice(0, 5)"
-          /><!-- Solução para limitar caracteres em input type number -->
+          />
           <small class="error-message"></small>
         </div>
 
@@ -44,6 +47,7 @@
             name="valor"
             required
             placeholder="R$ 0,00"
+            maxlength="16"
           />
           <small class="error-message"></small>
         </div>
@@ -51,6 +55,5 @@
         <button type="button" id="saveButton">Salvar</button>
       </form>
     </div>
-    <script src="script.js"></script>
   </body>
 </html>

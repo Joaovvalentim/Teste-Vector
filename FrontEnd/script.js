@@ -40,15 +40,63 @@ document.getElementById("saveButton").addEventListener("click", function () {
         return; // Para a execução se houver campos inválidos
     }
 
-    const cod = document.getElementById("cod").value;
-    const descricao = document.getElementById("descricao").value;
-    const valor = document.getElementById("valor").value;
+    const cod = parseInt(document.getElementById('cod').value, 10);
+    const descricao = document.getElementById('descricao').value;
+    const valor = document.getElementById('valor').value;
 
     const productData = {
         cod,
         descricao,
-        valor: valor.replace('R$ ', '').replace(',', '.'), // Converte para formato numérico
+        valor: parseFloat(valor.replace('R$ ', '').replace(',', '.')),
     };
 
     console.log(JSON.stringify(productData, null, 2));
 });
+
+// Chamando a API em JAVA
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById('productForm');
+    const saveButton = document.getElementById('saveButton');
+
+    saveButton.addEventListener('click', async () => {
+        const cod = document.getElementById('cod').value;
+        const descricao = document.getElementById('descricao').value;
+        const valor = document.getElementById('valor').value;
+
+        const produto = {
+            cod,
+            descricao,
+            valor
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(produto)
+            });
+
+            if (!response.ok) {
+                throw new Error('Erro ao enviar os dados');
+            }
+
+            const resultado = await response.json();
+            alert(`Produto salvo com sucesso: ${JSON.stringify(resultado)}`);
+        } catch (error) {
+            alert(`Erro: ${error.message}`);
+        }
+    });
+});
+
+var valorNum = document.getElementById("cod")
+
+valorNum.addEventListener("keydown", function (e) {
+    // prevent: "e"
+    if ([69].includes(e.keyCode)) {
+        e.preventDefault();
+    }
+})
